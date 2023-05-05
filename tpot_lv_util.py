@@ -9,8 +9,8 @@
 def parse_arguments( arguments ):
 
   # define fibers
-  fibers_south = {5, 7, 8, 9, 10, 24, 25}
-  fibers_north = {11, 12, 18, 19, 0, 1, 14, 15}
+  fibers_south = {5,  7,  6,  8,  9, 10, 24, 25}
+  fibers_north = {11, 12, 18, 19, 0, 1,  14, 15}
   fibers_all = fibers_south|fibers_north
 
   # map fiber id to crate, slots and channels

@@ -98,10 +98,12 @@ def lv_readi(tn,slot):
 # returns bitwise or of which channels are on
 def lv_readstatus(tn,slot):
     voltages=lv_readv(tn,slot)
+    currents=lv_readi(tn,slot)
     mask=0
     for c in range(10):
         voltage=voltages[c]
-        if voltage>0.05:
+        current=currents[c]
+        if voltage>0.05 or current>0.05:
             mask=mask|(1<<c)
     return mask
 
