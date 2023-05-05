@@ -27,7 +27,7 @@ for crate in sorted(channel_dict.keys()):
     ' digital slots: ',digital_slots,
     ' analog slots: ', analog_slots,
     ' channels: ',channels)
-    controller = ip[crate]
+  controller = ip[crate]
   print('controller: ',controller)
 
   tn = lv_connect(controller)
