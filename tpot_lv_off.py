@@ -27,17 +27,12 @@ for crate in sorted(channel_dict.keys()):
     ' digital slots: ',digital_slots,
     ' analog slots: ', analog_slots,
     ' channels: ',channels)
+
   controller = ip[crate]
   print('controller: ',controller)
 
   tn = lv_connect(controller)
-  for slot in digital_slots:
-    lv_enable_channels(tn,slot,channels)
-    time.sleep(1)
-
-  time.sleep(10)
-  for slot in analog_slots:
+  for slot in analog_slots+digital_slots:
     lv_disable_channels(tn,slot,channels)
     time.sleep(1)
-
   lv_disconnect(tn)
