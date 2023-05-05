@@ -18,20 +18,20 @@ def parse_arguments( arguments ):
     # south side fibers
     5: {'crate':'3A4-2', 'digital_slots':{15,16}, 'analog_slots':{14}, 'channel':4 },
     7: {'crate':'3A4-2', 'digital_slots':{15,16}, 'analog_slots':{14}, 'channel':4 },
-    6: {'crate':'3A4-2', 'digital_slots':{15,16}, 'analog_slots':{14}, 'channel':6 },
-    8: {'crate':'3A4-2', 'digital_slots':{15,16}, 'analog_slots':{14}, 'channel':6 },
-    9: {'crate':'3A4-2', 'digital_slots':{15,16}, 'analog_slots':{14}, 'channel':7 },
-    10:{'crate':'3A4-2', 'digital_slots':{15,16}, 'analog_slots':{14}, 'channel':7 },
+    6: {'crate':'3A4-2', 'digital_slots':{15,16}, 'analog_slots':{14}, 'channel':7 },
+    8: {'crate':'3A4-2', 'digital_slots':{15,16}, 'analog_slots':{14}, 'channel':7 },
+    9: {'crate':'3A4-2', 'digital_slots':{15,16}, 'analog_slots':{14}, 'channel':6 },
+    10:{'crate':'3A4-2', 'digital_slots':{15,16}, 'analog_slots':{14}, 'channel':6 },
     24:{'crate':'3A4-2', 'digital_slots':{15,16}, 'analog_slots':{14}, 'channel':8 },
     25:{'crate':'3A4-2', 'digital_slots':{15,16}, 'analog_slots':{14}, 'channel':8 },
 
     # north side fibers
     11:{'crate':'3C4-2', 'digital_slots':{14,15}, 'analog_slots':{13}, 'channel':4 },
     12:{'crate':'3C4-2', 'digital_slots':{14,15}, 'analog_slots':{13}, 'channel':4 },
-    18:{'crate':'3C4-2', 'digital_slots':{14,15}, 'analog_slots':{13}, 'channel':6 },
-    19:{'crate':'3C4-2', 'digital_slots':{14,15}, 'analog_slots':{13}, 'channel':6 },
-    0: {'crate':'3C4-2', 'digital_slots':{14,15}, 'analog_slots':{13}, 'channel':7 },
-    1: {'crate':'3C4-2', 'digital_slots':{14,15}, 'analog_slots':{13}, 'channel':7 },
+    18:{'crate':'3C4-2', 'digital_slots':{14,15}, 'analog_slots':{13}, 'channel':7 },
+    19:{'crate':'3C4-2', 'digital_slots':{14,15}, 'analog_slots':{13}, 'channel':7 },
+    0: {'crate':'3C4-2', 'digital_slots':{14,15}, 'analog_slots':{13}, 'channel':6 },
+    1: {'crate':'3C4-2', 'digital_slots':{14,15}, 'analog_slots':{13}, 'channel':6 },
     14:{'crate':'3C4-2', 'digital_slots':{14,15}, 'analog_slots':{13}, 'channel':8 },
     15:{'crate':'3C4-2', 'digital_slots':{14,15}, 'analog_slots':{13}, 'channel':8 }
   }
