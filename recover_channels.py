@@ -30,25 +30,31 @@ def initialize_channels( down_channels_all ):
         return
 
     fee_init_base_command = '/opt/venvs/sphenix-pytpc/bin/fee_init sampa --pre-samples 90 --samples 100 --shape-gain 6'
+    fee_init_command = fee_init_base_command + ' --region TPOT'
+    print( 'fee_init_command: ', fee_init_command )
 
-    for channel in  down_channels_all:
-        fee_init_command = fee_init_base_command + ' --fee ' + channel
-        print( 'fee_init_command: ', fee_init_command )
-    
-        # try at most 5 times
-        for i in range(0,5):
-            result = subprocess.run( ['ssh', 'ebdc39', '-x', fee_init_command], stdout=subprocess.PIPE)
-            output = result.stdout.decode('utf8');
-            print( output )
+    result = subprocess.run( ['ssh', 'ebdc39', '-x', fee_init_command], stdout=subprocess.PIPE)
+    output = result.stdout.decode('utf8');
+    print( output )
 
-            # parse output for errors and break if none found
-            error = (
-                re.match( 'SAMPA \d: Can\'t set time window', output ) or
-                re.match( 'SAMPA \d: Can\'t set pre trigger', output ) or
-                re.match( 'SAMPA \d: WARNING: Unexpected pre trigger length', output )
-            )
-            if not error:
-                break
+#     for channel in  down_channels_all:
+#         fee_init_command = fee_init_base_command + ' --fee ' + channel
+#         print( 'fee_init_command: ', fee_init_command )
+#     
+#         # try at most 5 times
+#         for i in range(0,5):
+#             result = subprocess.run( ['ssh', 'ebdc39', '-x', fee_init_command], stdout=subprocess.PIPE)
+#             output = result.stdout.decode('utf8');
+#             print( output )
+# 
+#             # parse output for errors and break if none found
+#             error = (
+#                 re.match( 'SAMPA \d: Can\'t set time window', output ) or
+#                 re.match( 'SAMPA \d: Can\'t set pre trigger', output ) or
+#                 re.match( 'SAMPA \d: WARNING: Unexpected pre trigger length', output )
+#             )
+#             if not error:
+#                 break
 
 #####################
 def main():
