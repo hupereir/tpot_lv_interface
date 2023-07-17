@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import subprocess
 import re
+import argparse
 
 from lvcontrol_hp import *
 from tpot_lv_util import *
@@ -58,16 +59,32 @@ def initialize_channels( down_channels_all ):
 
 #####################
 def main():
+
+    parser = argparse.ArgumentParser(
+        prog = 'tpot_lv_recover_fee_links',
+        description = 'Recovers lost fee links in TPOT',
+        epilog = '')
+    parser.add_argument('-f', '--force', action='store_true', help='do not ask for confirmation')
+    args = parser.parse_args()
+
     down_channels_all = []
+
+    # get FEE channels whose link is down
+    down_channels = get_down_channels()
+    if not down_channels:
+        print( 'recover_channels - nothing to do' )
+        exit(0)
+
+    # ask for confirmation
+    print( f'this will recover the following FEE links: {down_channels}' )
+    if not args.force:
+        reply = input('confirm (y/n) ? ')
+        if reply != 'y' and reply != 'yes':
+            exit(0)
 
     ### make three attempts at recovering all links
     for i in range(0,3):
         down_channels = get_down_channels()
-        if not down_channels:
-            print( 'recover_channels - nothing to do' )
-            break
-        else:
-            print( 'down channels: ', down_channels )
 
         # find matching lv channels
         channel_dict = parse_arguments( down_channels )
@@ -109,16 +126,21 @@ def main():
             for slot in analog_slots:
                 lv_enable_channels(tn,slot,channels)
                 time.sleep(1)
-    
+            
+            # update down channels and stop here if none is found
+            down_channels = get_down_channels()
+            if not down_channels:
+                break
+
     # get list of channels that could not be recovered
-    # down_channels = get_down_channels()
-    # print( 'Not all channels could be recovered: ', down_channels
+    down_channels = get_down_channels()
+    if down_channels:
+        print( 'Not all channels could be recovered: ', down_channels )
 
     # make sure channels are sorted and unique
     # and re-initialize
     down_channels_all = list( set( down_channels_all ) )
     initialize_channels( down_channels_all )
-    
 
 if __name__ == '__main__':
   main()
