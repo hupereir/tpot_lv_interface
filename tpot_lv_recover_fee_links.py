@@ -30,7 +30,7 @@ def initialize_channels( down_channels_all ):
         print( 'initialize_channels - noting to do' )
         return
 
-    fee_init_base_command = '/opt/venvs/sphenix-pytpc/bin/fee_init sampa --pre-samples 90 --samples 100 --shape-gain 6'
+    fee_init_base_command = '/opt/venvs/sphenix-pytpc/bin/fee_init sampa --pre-samples 99 --samples 100 --shape-gain 6'
     fee_init_command = fee_init_base_command + ' --region TPOT'
     print( 'fee_init_command: ', fee_init_command )
 
