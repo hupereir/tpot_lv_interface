@@ -122,6 +122,9 @@ def main():
                 lv_enable_channels(tn,slot,channels)
                 time.sleep(1)
             
+            # disconnect
+            lv_disconnect(tn)
+
             # update down channels and stop here if none is found
             down_channels = get_down_channels()
             if not down_channels:
