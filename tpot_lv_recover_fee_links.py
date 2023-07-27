@@ -9,7 +9,7 @@ from tpot_lv_util import *
 #######################
 def get_down_channels():
     # get FEE link status from ebdc39
-    result = subprocess.run( ['ssh', 'ebdc39', '-x', '~/hpereira/tpot_daq_interface/get_rx_ready.py'], stdout=subprocess.PIPE)
+    result = subprocess.run( ['ssh', 'ebdc39', '-x', '/home/phnxrc/operations/TPOT/tpot_daq_interface/get_rx_ready.py'], stdout=subprocess.PIPE)
     output = result.stdout.decode('utf8');
     rx_ready = re.findall( "(0|1)", output )
 
