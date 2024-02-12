@@ -5,7 +5,7 @@
 # John Haggerty, BNL
 # 2023-02-15 
 
-from lvcontrol import *
+from lvcontrol_hp import *
 import time
 import numpy as np
 
