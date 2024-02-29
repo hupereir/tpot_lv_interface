@@ -9,7 +9,7 @@
 def parse_arguments( arguments ):
 
   # define fibers
-  fibers_south = {5,  7,  6,  8,  9, 10, 24, 25}
+  fibers_south = {5,  7,  6,  8,  9, 23, 24, 25}
   fibers_north = {11, 12, 18, 19, 0, 1,  14, 15}
   fibers_all = fibers_south|fibers_north
 
@@ -21,7 +21,7 @@ def parse_arguments( arguments ):
     6: {'crate':'3A4-2', 'digital_slots':{15,16}, 'analog_slots':{14}, 'channel':7 },
     8: {'crate':'3A4-2', 'digital_slots':{15,16}, 'analog_slots':{14}, 'channel':7 },
     9: {'crate':'3A4-2', 'digital_slots':{15,16}, 'analog_slots':{14}, 'channel':6 },
-    10:{'crate':'3A4-2', 'digital_slots':{15,16}, 'analog_slots':{14}, 'channel':6 },
+    23:{'crate':'3A4-2', 'digital_slots':{15,16}, 'analog_slots':{14}, 'channel':6 },
     24:{'crate':'3A4-2', 'digital_slots':{15,16}, 'analog_slots':{14}, 'channel':8 },
     25:{'crate':'3A4-2', 'digital_slots':{15,16}, 'analog_slots':{14}, 'channel':8 },
 
