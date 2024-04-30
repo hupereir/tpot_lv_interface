@@ -30,7 +30,7 @@ def configure_all_fee():
     print( 'configuring all FEE' )
 
     fee_init_command = '/home/phnxrc/operations/TPOT/tpot_daq_interface/fee_init_tpot.py'
-    result = subprocess.run( ['ssh', 'ebdc39', '-x', fee_init_command], stdout=subprocess.PIPE)
+    result = subprocess.run( [fee_init_command], stdout=subprocess.PIPE)
     output = result.stdout.decode('utf8');
     print( output )
 
@@ -50,6 +50,11 @@ def main():
         reply = input('confirm (y/n) ? ')
         if reply != 'y' and reply != 'yes':
             exit(0)
+
+    ### turn on all FEE
+    result = subprocess.run( ['/home/phnxrc/operations/TPOT/tpot_lv_interface/tpot_lv_on.py', 'all'], stdout=subprocess.PIPE)
+    output = result.stdout.decode('utf8');
+    print( output )
 
     ### make three attempts at recovering all links
     for i in range(0,3):

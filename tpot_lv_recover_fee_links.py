@@ -52,6 +52,16 @@ def initialize_channels( down_channels_all ):
                 print( 'success' )
                 break
 
+#######################
+def configure_all_fee():
+
+    print( 'configuring all FEE' )
+
+    fee_init_command = '/home/phnxrc/operations/TPOT/tpot_daq_interface/fee_init_tpot.py'
+    result = subprocess.run( [fee_init_command], stdout=subprocess.PIPE)
+    output = result.stdout.decode('utf8');
+    print( output )
+
 #####################
 def main():
 
@@ -137,8 +147,11 @@ def main():
 
     # make sure channels are sorted and unique
     # and re-initialize
-    down_channels_all = list( set( down_channels_all ) )
-    initialize_channels( down_channels_all )
+    # this is broken for now [April 29 2024]. Configure all FEEs instead
+    # down_channels_all = list( set( down_channels_all ) )
+    # initialize_channels( down_channels_all )
+
+    configure_all_fee()
 
 if __name__ == '__main__':
   main()
