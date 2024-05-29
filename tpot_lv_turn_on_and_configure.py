@@ -14,8 +14,9 @@ def get_down_channels():
     rx_ready = re.findall( "(0|1)", output )
 
     # these are TPOT links
-    fee_list = [0, 1, 5, 6, 7, 8, 9, 11, 12, 14, 15, 18, 19, 23, 24, 25]
-
+    # fee_list = [0, 1, 5, 6, 7, 8, 9, 11, 12, 14, 15, 18, 19, 23, 24, 25]
+    fee_list = [0, 1, 5, 6, 7, 8, 9, 12, 14, 15, 18, 19, 21, 23, 24, 25]
+    
     # check which links are down (rx_ready = 0)
     down_channels = []
     for i, row in enumerate(rx_ready):
@@ -44,6 +45,10 @@ def main():
     parser.add_argument('-f', '--force', action='store_true', help='do not ask for confirmation')
     args = parser.parse_args()
 
+    # check if channels are not already on
+    if not get_down_channels():
+        exit(0)
+    
     # ask for confirmation
     print( f'this will turn ON all TPOT FEE, and configure them. ' )
     if not args.force:

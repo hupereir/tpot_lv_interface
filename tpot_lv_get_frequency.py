@@ -29,8 +29,9 @@ def get_stuck_channels():
     max_frequency = 5000
    
     # these are TPOT links
-    fee_list = [0, 1, 5, 6, 7, 8, 9, 11, 12, 14, 15, 18, 19, 23, 24, 25]
-   
+    # fee_list = [0, 1, 5, 6, 7, 8, 9, 11, 12, 14, 15, 18, 19, 23, 24, 25]
+    fee_list = [0, 1, 5, 6, 7, 8, 9, 12, 14, 15, 18, 19, 21, 23, 24, 25]
+
     # calculate frequencies, check which links are above threshold
     down_channels = []
     for i, (begin,end) in enumerate(zip(rx_sob_begin, rx_sob_end)):

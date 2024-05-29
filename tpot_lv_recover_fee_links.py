@@ -14,7 +14,7 @@ def get_down_channels():
     rx_ready = re.findall( "(0|1)", output )
 
     # these are TPOT links
-    fee_list = [0, 1, 5, 6, 7, 8, 9, 11, 12, 14, 15, 18, 19, 23, 24, 25]
+    fee_list = [0, 1, 5, 6, 7, 8, 9, 12, 14, 15, 18, 19, 21, 23, 24, 25]
 
     # check which links are down (rx_ready = 0)
     down_channels = []
@@ -24,7 +24,8 @@ def get_down_channels():
 
     return down_channels
 
-#######################
+#########################################
+#### not used (and broken) since April 29
 def initialize_channels( down_channels_all ):
     if not down_channels_all:
         print( 'initialize_channels - noting to do' )

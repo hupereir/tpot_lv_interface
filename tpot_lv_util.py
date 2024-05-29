@@ -10,7 +10,8 @@ def parse_arguments( arguments ):
 
   # define fibers
   fibers_south = {5,  7,  6,  8,  9, 23, 24, 25}
-  fibers_north = {11, 12, 18, 19, 0, 1,  14, 15}
+  # fibers_north = {11, 12, 18, 19, 0, 1,  14, 15}
+  fibers_north = {21, 12, 18, 19, 0, 1,  14, 15}
   fibers_all = fibers_south|fibers_north
 
   # map fiber id to crate, slots and channels
@@ -26,7 +27,8 @@ def parse_arguments( arguments ):
     25:{'crate':'3A4-2', 'digital_slots':{15,16}, 'analog_slots':{14}, 'channel':8 },
 
     # north side fibers
-    11:{'crate':'3C4-2', 'digital_slots':{14,15}, 'analog_slots':{13}, 'channel':4 },
+    # 11:{'crate':'3C4-2', 'digital_slots':{14,15}, 'analog_slots':{13}, 'channel':4 },
+    21:{'crate':'3C4-2', 'digital_slots':{14,15}, 'analog_slots':{13}, 'channel':4 },
     12:{'crate':'3C4-2', 'digital_slots':{14,15}, 'analog_slots':{13}, 'channel':4 },
     18:{'crate':'3C4-2', 'digital_slots':{14,15}, 'analog_slots':{13}, 'channel':7 },
     19:{'crate':'3C4-2', 'digital_slots':{14,15}, 'analog_slots':{13}, 'channel':7 },
