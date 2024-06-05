@@ -31,7 +31,8 @@ def initialize_channels( down_channels_all ):
         print( 'initialize_channels - noting to do' )
         return
 
-    fee_init_base_command = '/opt/venvs/sphenix-pytpc/bin/fee_init sampa --pre-samples 103 --samples 50 --shape-gain 6'
+    # NOTE this must be kept consistent with what is in fee_init_tpot.py
+    fee_init_base_command = '/home/phnxrc/operations/TPOT/tpot_daq_interface/fee_init_local  triggered --connect-tpot --pre-samples 86 --samples 25 --shape-gain 6'
     for channel in  down_channels_all:
         fee_init_command = fee_init_base_command + ' --fee ' + channel + ' --no-stream-enable'
         print( 'fee_init_command: ', fee_init_command )
@@ -150,9 +151,7 @@ def main():
     # and re-initialize
     # this is broken for now [April 29 2024]. Configure all FEEs instead
     # down_channels_all = list( set( down_channels_all ) )
-    # initialize_channels( down_channels_all )
-
-    configure_all_fee()
+    initialize_channels( down_channels_all )
 
 if __name__ == '__main__':
   main()
