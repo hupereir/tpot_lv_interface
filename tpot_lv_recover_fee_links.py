@@ -31,8 +31,10 @@ def initialize_channels( down_channels_all ):
         print( 'initialize_channels - noting to do' )
         return
 
-    # NOTE this must be kept consistent with what is in fee_init_tpot.py
-    fee_init_base_command = '/home/phnxrc/operations/TPOT/tpot_daq_interface/fee_init_local  triggered --connect-tpot --pre-samples 86 --samples 25 --shape-gain 6'
+    # NOTE this must be kept consistent with what is in tpot_fee_init.py
+    # fee_init_base_command = '/home/phnxrc/operations/TPOT/tpot_daq_interface/fee_init_local  triggered --connect-tpot --pre-samples 86 --samples 25 --shape-gain 6'
+    fee_init_base_command = '/home/phnxrc/operations/TPOT/tpot_daq_interface/fee_init_local triggered_zsup --connect-tpot --pre-samples 86 --samples 25 --shape-gain 6 --thres 520'
+
     for channel in  down_channels_all:
         fee_init_command = fee_init_base_command + ' --fee ' + channel + ' --no-stream-enable'
         print( 'fee_init_command: ', fee_init_command )
@@ -59,7 +61,7 @@ def configure_all_fee():
 
     print( 'configuring all FEE' )
 
-    fee_init_command = '/home/phnxrc/operations/TPOT/tpot_daq_interface/fee_init_tpot.py'
+    fee_init_command = '/home/phnxrc/operations/TPOT/tpot_daq_interface/tpot_fee_init.py'
     result = subprocess.run( [fee_init_command], stdout=subprocess.PIPE)
     output = result.stdout.decode('utf8');
     print( output )

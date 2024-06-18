@@ -30,7 +30,7 @@ def configure_all_fee():
 
     print( 'configuring all FEE' )
 
-    fee_init_command = '/home/phnxrc/operations/TPOT/tpot_daq_interface/fee_init_tpot.py'
+    fee_init_command = '/home/phnxrc/operations/TPOT/tpot_daq_interface/tpot_fee_init.py'
     result = subprocess.run( [fee_init_command], stdout=subprocess.PIPE)
     output = result.stdout.decode('utf8');
     print( output )
