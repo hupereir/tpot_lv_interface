@@ -33,7 +33,9 @@ def initialize_channels( down_channels_all ):
 
     # NOTE this must be kept consistent with what is in tpot_fee_init.py
     # fee_init_base_command = '/home/phnxrc/operations/TPOT/tpot_daq_interface/fee_init_local  triggered --connect-tpot --pre-samples 86 --samples 25 --shape-gain 6'
+    threshold_file = '/home/phnxrc/operations/TPOT/tpot_daq_interface/TPOT_thresholds.json'
     fee_init_base_command = '/home/phnxrc/operations/TPOT/tpot_daq_interface/fee_init_local triggered_zsup --connect-tpot --pre-samples 86 --samples 25 --shape-gain 6 --thres 520'
+    fee_init_base_command = fee_init_base_command + ' --thresvar ' + threshold_file
 
     for channel in  down_channels_all:
         fee_init_command = fee_init_base_command + ' --fee ' + channel + ' --no-stream-enable'
