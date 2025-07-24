@@ -24,45 +24,17 @@ def get_down_channels():
 
     return down_channels
 
-#########################################
-#### not used (and broken) since April 29
-def initialize_channels( down_channels_all ):
-    if not down_channels_all:
-        print( 'initialize_channels - noting to do' )
-        return
-
-    # NOTE this must be kept consistent with what is in tpot_fee_init.py
-    # fee_init_base_command = '/home/phnxrc/operations/TPOT/tpot_daq_interface/fee_init_local  triggered --connect-tpot --pre-samples 86 --samples 25 --shape-gain 6'
-    threshold_file = '/home/phnxrc/operations/TPOT/tpot_daq_interface/TPOT_thresholds.json'
-    fee_init_base_command = '/home/phnxrc/operations/TPOT/tpot_daq_interface/fee_init_local triggered_zsup --connect-tpot --pre-samples 86 --samples 25 --shape-gain 6 --thres 520'
-    fee_init_base_command = fee_init_base_command + ' --thresvar ' + threshold_file
-
-    for channel in  down_channels_all:
-        fee_init_command = fee_init_base_command + ' --fee ' + channel + ' --no-stream-enable'
-        print( 'fee_init_command: ', fee_init_command )
-        
-        # try at most 5 times
-        for i in range(0,10):
-            result = subprocess.run( ['ssh', 'ebdc39', '-x', fee_init_command], stdout=subprocess.PIPE)
-            output = result.stdout.decode('utf8');
-            # print( output )
-    
-            # parse output for errors and break if none found
-            error = (
-                re.match( 'SAMPA \d: Can\'t set time window', output ) or
-                re.match( 'SAMPA \d: Can\'t set pre trigger', output ) or
-                re.match( 'SAMPA \d: WARNING: Unexpected pre trigger length', output ) or
-                re.match( 'SAMPA \d: WARNING: Unexpected time window length', output )
-            )
-            if not error:
-                print( 'success' )
-                break
+#######################
+def resynchronize_clocks():
+    # run the tpot_gtm_fee_init script, on ebdc39
+    print( 'synchronizing FEE clocks' )
+    result = subprocess.run( ['ssh', 'ebdc39', '-x', '/home/phnxrc/operations/TPOT/tpot_daq_interface/tpot_gtm_fee_init.sh'], stdout=subprocess.PIPE)
+    output = result.stdout.decode('utf8');
+    print( output )
 
 #######################
 def configure_all_fee():
-
     print( 'configuring all FEE' )
-
     fee_init_command = '/home/phnxrc/operations/TPOT/tpot_daq_interface/tpot_fee_init.py'
     result = subprocess.run( [fee_init_command], stdout=subprocess.PIPE)
     output = result.stdout.decode('utf8');
@@ -70,7 +42,6 @@ def configure_all_fee():
 
 #####################
 def main():
-
     parser = argparse.ArgumentParser(
         prog = 'tpot_lv_recover_fee_links',
         description = 'Recovers lost fee links in TPOT',
@@ -151,11 +122,11 @@ def main():
     if down_channels:
         print( 'Not all channels could be recovered: ', down_channels )
 
-    # make sure channels are sorted and unique
-    # and re-initialize
-    # this is broken for now [April 29 2024]. Configure all FEEs instead
-    # down_channels_all = list( set( down_channels_all ) )
-    initialize_channels( down_channels_all )
+    # need to re-synchronize all clocks
+    resynchronize_clocks()
+        
+    # reinitialize all fee
+    configure_all_fee()
 
 if __name__ == '__main__':
   main()
