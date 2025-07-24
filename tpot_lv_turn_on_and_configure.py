@@ -14,7 +14,6 @@ def get_down_channels():
     rx_ready = re.findall( "(0|1)", output )
 
     # these are TPOT links
-    # fee_list = [0, 1, 5, 6, 7, 8, 9, 11, 12, 14, 15, 18, 19, 23, 24, 25]
     fee_list = [0, 1, 5, 6, 7, 8, 9, 12, 14, 15, 18, 19, 21, 23, 24, 25]
     
     # check which links are down (rx_ready = 0)
@@ -24,6 +23,15 @@ def get_down_channels():
             down_channels.append(str(i))
 
     return down_channels
+
+#######################
+def resynchronize_clocks():
+    # run the tpot_gtm_fee_init script, on ebdc39
+    print( 'synchronizing FEE clocks' )
+    result = subprocess.run( ['ssh', 'ebdc39', '-x', '/home/phnxrc/operations/TPOT/tpot_daq_interface/tpot_gtm_fee_init.sh'], stdout=subprocess.PIPE)
+    output = result.stdout.decode('utf8');
+    print( output )
+
 
 #######################
 def configure_all_fee():
@@ -113,7 +121,9 @@ def main():
     if down_channels:
         print( 'Not all channels could be recovered: ', down_channels )
 
-    # make sure channels are sorted and unique
+    # need to re-synchronize all clocks
+    resynchronize_clocks()
+
     # and re-initialize
     configure_all_fee()
 
