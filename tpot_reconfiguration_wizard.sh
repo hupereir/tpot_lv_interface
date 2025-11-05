@@ -27,7 +27,7 @@ TMP_SOF="$HOME/operations/TPOT/logs/tpot_fee_sof.out"
 LOGFILE="$LOG_DIR/tpot_reconfig_$(date +'%Y%m%d_%H%M%S').log"     
 
 
-MAX_ITER=3
+MAX_ITER=5
 
 timestamp() { date +"[%Y-%m-%d %H:%M:%S]"; }
 
@@ -109,6 +109,22 @@ phase2_verify() {
         median=${sorted[mid-1]}
     fi
 
+    log "Individual FEE Rx SOF values:"
+    local idx=0
+    while read -r val; do
+        local fee_id=${TPOT_FEES[$idx]:-unknown}
+        log "  FEE $fee_id : Rx SOF = $val"
+        ((idx++))
+    done < "$TMP_SOF"
+
+    #This part is to make sure we can handle it if there are 8 or more misconfigured FEE. 
+    if (( $(echo "$median > 20000" | bc -l) )); then
+        log "Disaster cutoff scenario triggered: median Rx SOF = $median (>15000)"
+        log "Reconfiguring all FEEs."
+
+        ./fee_init_local triggered_zsup  --connect-tpot  --pre-samples 76 --samples 25 --shape-gain 6 --thres 520  --thresvar TPOT_thresholds.json --fee "${TPOT_FEES[@]}" --no-stream-enable >>"$LOGFILE" 2>&1
+    fi
+
     local tolerance
     tolerance=$(echo "$median / 8" | bc -l)
 
@@ -135,9 +151,11 @@ phase2_verify() {
         echo "Wizard status: SUCCESS | All FEEs preoperly configured." > "$STATUS_FILE"
 
 	#Load the beam scheduler back in
-	log "Executing standard_beam.scheduler"
-        gl1_gtm_client gtm_load_modebits 12 /home/phnxrc/operations/TPOT/schedulers/standard_beam.scheduler >>"$LOGFILE" 2>&1 || log "gl1_gtm_client command failed. Run physics setup again"
-        return 0
+	#log "Executing standard_beam.scheduler"
+        #gl1_gtm_client gtm_load_modebits 12 /home/phnxrc/operations/TPOT/schedulers/standard_beam.scheduler >>"$LOGFILE" 2>&1 || log "gl1_gtm_client command failed. Run physics setup again"
+	#rc_client rc_add_host ebdc39 >>"$LOGFILE" 2>&1 || log "rc_add_host command failed. Run physics setup again."
+	#gl1_gtm_client gtm_set_mode 12 1 >>"$LOGFILE" 2>&1 || log "gtm_set_mode command failed. Run physics setup again."  
+        #return 0
     else
 	local fee_list=()
 	for idx in "${failed[@]}"; do
