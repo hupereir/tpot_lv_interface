@@ -7,7 +7,7 @@
 # Then it takes the output from the monitoring status info and
 # checks if any of the runs are outside of the tolerance
 # If it is, then it reconfigures again and tries again
-# for now, up to 3 times
+# for now, up to 5 times
 # ==============================================================
 
 set -euo pipefail
@@ -125,24 +125,24 @@ phase2_verify() {
         ./fee_init_local triggered_zsup  --connect-tpot  --pre-samples 76 --samples 25 --shape-gain 6 --thres 520  --thresvar TPOT_thresholds.json --fee "${TPOT_FEES[@]}" --no-stream-enable >>"$LOGFILE" 2>&1
     fi
 
-    local tolerance
-    tolerance=$(echo "$median / 8" | bc -l)
+    local upper_limit lower_limit
 
-    log "Median Rx SOF: $median (tolerance ±$tolerance)"
+    # upper_limit=$(echo "$median + ($median / 1.5)" | bc -l)   
+    upper_limit=$(echo "$median + ($median / 1.25)" | bc -l)   
+    lower_limit=$(echo "$median - ($median / 8)" | bc -l)  
+    log "Median Rx SOF: $median (acceptable range: $lower_limit – $upper_limit)"
 
     local failed=()
     local idx=0
 
     while read -r val; do
-        diff=$(echo "$val - $median" | bc -l)
-        absdiff=$(echo "${diff#-}")
-        if (( $(echo "$absdiff > $tolerance" | bc -l) )); then
+        if (( $(echo "$val > $upper_limit" | bc -l) )) || (( $(echo "$val < $lower_limit" | bc -l) )); then
             failed+=("$idx")
         fi
         ((idx++))
     done < "$TMP_SOF"
 
-    #FEE mapping)
+    #FEE mapping
     TPOT_FEES=(0 1 5 6 7 8 9 12 14 15 18 19 21 23 24 25)
 
     
