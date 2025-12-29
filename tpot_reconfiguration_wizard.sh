@@ -119,31 +119,58 @@ phase2_verify() {
 
     #This part is to make sure we can handle it if there are 8 or more misconfigured FEE. 
     if (( $(echo "$median > 20000" | bc -l) )); then
-        log "Disaster cutoff scenario triggered: median Rx SOF = $median (>15000)"
+        log "Disaster cutoff scenario triggered: median Rx SOF = $median (>20000)"
         log "Reconfiguring all FEEs."
 
-        ./fee_init_local triggered_zsup  --connect-tpot  --pre-samples 76 --samples 25 --shape-gain 6 --thres 520  --thresvar TPOT_thresholds.json --fee "${TPOT_FEES[@]}" --no-stream-enable >>"$LOGFILE" 2>&1
+#	# default configuration
+#       ./fee_init_local triggered_zsup  --connect-tpot  --pre-samples 76 --samples 25 --shape-gain 6 --thres 520  --thresvar TPOT_thresholds.json --fee "${TPOT_FEES[@]}" --no-stream-enable >>"$LOGFILE" 2>&1
+
+	# extended readout configuration
+        ./fee_init_local triggered_zsup  --connect-tpot  --pre-samples 76 --samples 1023 --shape-gain 6 --thres 520  --thresvar TPOT_thresholds.json --fee "${TPOT_FEES[@]}" --no-stream-enable >>"$LOGFILE" 2>&1
+
     fi
 
     local upper_limit lower_limit
 
     # upper_limit=$(echo "$median + ($median / 1.5)" | bc -l)   
     upper_limit=$(echo "$median + ($median / 1.25)" | bc -l)   
-    lower_limit=$(echo "$median - ($median / 8)" | bc -l)  
+    lower_limit=$(echo "$median - 1.1 * ($median / 8)" | bc -l)  
     log "Median Rx SOF: $median (acceptable range: $lower_limit – $upper_limit)"
 
+    TPOT_FEES=(0 1 5 6 7 8 9 12 14 15 18 19 21 23 24 25) 
+   
+#    #Handle the FEEs 5 and 7 separately since they are super noisy. We can add more as needed.  
+#    declare -A NOISE_HIGH=([5]=44000 [7]=44000 [8]=24000)
+#    declare -A NOISE_LOW=([5]=31000 [7]=31000 [8]=17000)
+    
+    #Handle the FEEs 5 and 7 separately since they are super noisy. We can add more as needed.  
+    #declare -A NOISE_HIGH=([5]=24000 [7]=24000 [8]=24000)
+    #declare -A NOISE_LOW=([5]=17000 [7]=17000 [8]=17000)
+    declare -A NOISE_HIGH=()
+    declare -A NOISE_LOW=()
+    
     local failed=()
     local idx=0
 
     while read -r val; do
-        if (( $(echo "$val > $upper_limit" | bc -l) )) || (( $(echo "$val < $lower_limit" | bc -l) )); then
+	local fee_id=${TPOT_FEES[$idx]:-unknown}
+	local high low
+
+	#Handle high noise FEE separately
+	if [[ -n "${NOISE_HIGH[$fee_id]+x}" ]]; then
+            high=${NOISE_HIGH[$fee_id]}
+            low=${NOISE_LOW[$fee_id]}
+            log "FEE $fee_id (high noise): using +$high / -$low"
+        else
+            high=$upper_limit
+            low=$lower_limit
+        fi
+	
+        if (( $(echo "$val > $high" | bc -l) )) || (( $(echo "$val < $low" | bc -l) )); then
             failed+=("$idx")
         fi
         ((idx++))
     done < "$TMP_SOF"
-
-    #FEE mapping
-    TPOT_FEES=(0 1 5 6 7 8 9 12 14 15 18 19 21 23 24 25)
 
     
     if (( ${#failed[@]} == 0 )); then
@@ -166,7 +193,11 @@ phase2_verify() {
 	echo "Wizard status: Iteration $ITER | Out of tolerance FEEs: ${fee_list[*]}" > "$STATUS_FILE"
         log "Attempting to reinitialize FEEs: ${fee_list[*]}"
 
-        /home/phnxrc/operations/TPOT/tpot_daq_interface/fee_init_local triggered_zsup --connect-tpot --pre-samples 76 --samples 25 --shape-gain 6 --thres 520 --thresvar /home/phnxrc/operations/TPOT/tpot_daq_interface/TPOT_thresholds.json --fee "${fee_list[@]}" --no-stream-enable >>"$LOGFILE" 2>&1
+#	# default configuration
+#       /home/phnxrc/operations/TPOT/tpot_daq_interface/fee_init_local triggered_zsup --connect-tpot --pre-samples 76 --samples 25 --shape-gain 6 --thres 520 --thresvar /home/phnxrc/operations/TPOT/tpot_daq_interface/TPOT_thresholds.json --fee "${fee_list[@]}" --no-stream-enable >>"$LOGFILE" 2>&1
+
+	# extended readout configuration
+	/home/phnxrc/operations/TPOT/tpot_daq_interface/fee_init_local triggered_zsup --connect-tpot --pre-samples 76 --samples 1023 --shape-gain 6 --thres 520 --thresvar /home/phnxrc/operations/TPOT/tpot_daq_interface/TPOT_thresholds.json --fee "${fee_list[@]}" --no-stream-enable >>"$LOGFILE" 2>&1
 
         log "FEE reinitialization complete."
         return 1
